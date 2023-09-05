@@ -26,13 +26,31 @@ app.use(bodyParser.json());
 //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
 /**************************************************************************** */
+app.get(`/filteredimage`, async (req, res) => {
+  const image_url = req.query.image_url;
+
+  if (!image_url) {
+    return res.status(400).send("Image URL is required.");
+  }
+
+  try {
+    const filteredPath = await filterImageFromURL(image_url);
+
+    res.sendFile(filteredPath, () => {
+      deleteLocalFiles([filteredPath]);
+    });
+  } catch (error) {
+    console.error("Error filtering image:", error);
+    res.status(500).send("Error processing the image.");
+  }
+});
 
 //! END @TODO1
 
 // Root Endpoint
 // Displays a simple message to the user
 app.get("/", async (req, res) => {
-  res.send(`try GET /filteredimage?image_url={{}}`);
+  res.send("try GET /filteredimage?image_url={{}}");
 });
 
 // Start the Server
