@@ -1,6 +1,5 @@
 import fs from "fs";
-import Jimp from "jimp";
-
+import Jimp = require("jimp");
 
 // filterImageFromURL
 // helper function to download, filter, and save the filtered image locally
@@ -9,7 +8,7 @@ import Jimp from "jimp";
 //    inputURL: string - a publicly accessible url to an image file
 // RETURNS
 //    an absolute path to a filtered image locally saved file
- export async function filterImageFromURL(inputURL) {
+export async function filterImageFromURL(inputURL: string): Promise<string> {
   return new Promise(async (resolve, reject) => {
     try {
       const photo = await Jimp.read(inputURL);
@@ -19,8 +18,8 @@ import Jimp from "jimp";
         .resize(256, 256) // resize
         .quality(60) // set JPEG quality
         .greyscale() // set greyscale
-        .write(outpath, (img) => {
-          resolve(outpath);
+        .write(__dirname + outpath, (img) => {
+          resolve(__dirname + outpath);
         });
     } catch (error) {
       reject(error);
@@ -33,7 +32,7 @@ import Jimp from "jimp";
 // useful to cleanup after tasks
 // INPUTS
 //    files: Array<string> an array of absolute paths to files
- export async function deleteLocalFiles(files) {
+export async function deleteLocalFiles(files: Array<string>) {
   for (let file of files) {
     fs.unlinkSync(file);
   }
